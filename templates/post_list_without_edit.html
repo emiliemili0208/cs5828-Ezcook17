@@ -1,0 +1,79 @@
+
+{% extends 'header.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+
+    <div class="form-group col-md-12 row" style="margin-top: 30px">
+        <i class="fa fa-search fa-2x pull-left searchicon"></i>
+        <div class="col-sm-12 col-md-12 col-lg-8">
+            <input type="search" class="form-control" id="search" placeholder="Filter recipes...">
+        </div>
+    </div>
+    <div id="list">
+    {% for post in posts %}
+        <div class="post">
+            <div class="date">
+                {{ post.post_time }}
+            </div>
+	    <div>
+		<p> by <a href="{% url 'profilex' post.owner  %}"> {{ post.owner }}</a></p>
+	    </div>
+            <h1><a href="{% url 'post_detail_without_edit' pk=post.pk|stringformat:"s" %}">{{ post.title }}</a></h1>
+            <p>{{ post.content|linebreaksbr }}</p>
+            <hr class="divider" />
+        </div>
+    {% endfor %}
+    </div>
+
+    <script>
+    $(function() {
+        $('#search').on('keyup', function() {
+            var pattern = $(this).val();
+            $('.post').hide();
+            $('.post').filter(function() {
+                return $(this).text().match(new RegExp(pattern, 'i'));
+            }).show();
+        });
+    });
+    </script>
+    <script>
+    function ajaxCall() {
+        $.ajax({
+        type: 'GET',
+        url: window.location.href,
+        success: function(posts_str){
+            console.log(posts_str);
+            posts_json = JSON.parse(posts_str)
+            html = '';
+            for(var count in posts_json){
+                date = new Date(posts_json[count].post_time).toString().split(" ");
+                hr = new Date(posts_json[count].post_time).getHours();
+                min = date[4].split(":")[1]
+                noon = 'a.m.';
+                if(hr > 12){
+                    hr -= 12;
+                    noon = 'p.m.';
+                }
+                newdate = `${date[1]} ${parseInt(date[2]).toString()}, ${date[3]}, ${hr}:${min} ${noon}`;
+                html+=`<div class="post">
+                    <div class="date">
+                        ${newdate}
+                    </div>
+                    <p> by <a href="/profile/${ posts_json[count].owner }"> ${ posts_json[count].owner }</a></p>
+                    <h1><a href="${posts_json[count].id}">${ posts_json[count].title}</a></h1>
+                    <p>${posts_json[count].content}</p>
+                    <hr class="divider" />
+                </div>`
+            }
+            $('#list').html(html);
+        }
+      });
+    }
+
+    setInterval(ajaxCall, 2000);
+    </script>
+
+</div>
+{% endblock %}

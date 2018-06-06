@@ -1,0 +1,22 @@
+{% extends 'header.html' %}
+
+{% block content %}
+<div closs="row">
+    <div class="col-md-8">
+	    <h2> {{profile_user.username }}'s recipts:</h2>
+
+        {% for post in posts %}
+            <div class="post">
+                <div class="date">
+                    {{ post.post_time }}
+                </div>
+    	    <h3><a href="{% url 'post_detail_without_edit' pk=post.pk|stringformat:"s" %}">{{ post.title }}</a></h3>
+                <p>{{ post.content|linebreaksbr }}</p>
+                <hr class="divider" />
+            </div>
+        {% endfor %}
+    </div>
+
+
+</div>
+{% endblock %}

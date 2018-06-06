@@ -1,0 +1,15 @@
+{% extends 'header.html' %}
+
+{% block content %}
+<!-- <div>
+	<a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+</div> -->
+<div class="row">
+    <div class="col-md-8">
+    <h1>New Ingredient</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+</div>
+{% endblock %}

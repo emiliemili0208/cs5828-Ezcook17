@@ -1,0 +1,69 @@
+{% extends 'header.html' %} {% block content %}
+<!-- <div>
+    <a href="{% url 'add_ingredient' %}" class="fas fa-plus" style="zoom: 150%"></a>
+</div> -->
+<div class="row">
+    <div class="col-md-8">
+        <h1 style="margin-top: 30px">My Stock</h1>
+        <div class="form-group col-md-12 row" style="margin-top: 30px">
+            <i class="fa fa-search fa-2x pull-left searchicon"></i>
+            <div class="col-sm-12 col-md-12 col-lg-8">
+                <input type="search" class="form-control" id="search" placeholder="Filter items...">
+            </div>
+        </div>
+
+        <div class="items-collection">
+            <div class="form-group row">
+                {% for ingred, amount in ingredients.items %}
+                <div class="items">
+                    <div class="info-block block-info clearfix">
+                        <div data-toggle="buttons" class="btn-group btn-group-toggle">
+                            <label id="id_{{ingred}}" class="btn btn-primary">
+                                <div class="itemcontent">
+                                    <span class="fa fa-check fa-2x" style="zoom:90%"></span>
+                                    <h5>{{ amount }} {{ ingred }}</h5>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h3>You will also like...</h3>
+        {% for recipe in recommendation %}
+        <div class="card bg-light" style="width: 25rem; margin-bottom: 5px">
+          <div class="card-body">
+            <h5 class="card-title" id="title">{{recipe.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted" id="author">Author: {{recipe.owner}}</h6>
+            <p class="card-text" id="content">{{recipe.content}}</p>
+            <a href="/home/{{recipe.id}}" class="card-link">More...</a>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    $(".btn-group label").each(function(i, label) {
+        $(this).click(function() {
+            console.log($(this).hasClass('active'))
+            $(this).hasClass('active') ? $(this).removeClass("active") : $(this).addClass("active");
+        });
+    });
+</script>
+
+<script>
+    $(function() {
+        $('#search').on('keyup', function() {
+            var pattern = $(this).val();
+            $('.items-collection .items').hide();
+            $('.items-collection .items').filter(function() {
+                return $(this).text().match(new RegExp(pattern, 'i'));
+            }).show();
+        });
+    });
+</script>
+{% endblock %}
